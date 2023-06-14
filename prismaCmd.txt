@@ -1,0 +1,92 @@
+
+
+
+1.Install
+ >>npm install -D prisma
+2.Init
+>>npx prisma init
+Output:
+3. Run prisma db pull to turn your database schema into a Prisma schema.
+4. Run prisma generate to generate the Prisma Client. You can then start querying your database.
+
+More information in our documentation:
+https://pris.ly/d/getting-started
+
+
+
+Now after we created our db models in prisma/schema.prisma we need to push them to our mongo db database
+For that be sure that the link crom mongo db is added to .env like this one:
+>>DATABASE_URL="mongodb+srv://apiasecki93:airbnb@cluster0.en8qhxh.mongodb.net/test" 
+# !!!!!IMPORTANT!!!!!
+# at the end of the url I added /test because I was getting an error that the database didn't exist and this fixed it because it created a test database
+# you can name it as you want for example /airbnbmongodb and then it will be automatycly created with this name
+
+And run command:
+>>npx prisma db push
+Output:
+D:\JavaScript\next.js\airbnb-clone-artweb>npx prisma db push
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": MongoDB database "test" at "cluster0.en8qhxh.mongodb.net"
+Applying the following changes:
+
+[+] Collection `User`
+[+] Collection `Account`
+[+] Collection `Listing`
+[+] Unique index `User_email_key` on ({"email":1})
+[+] Unique index `Account_provider_providerAccountId_key` on ({"provider":1,"providerAccountId":1})
+
+
+Your database indexes are now in sync with your Prisma schema. Done in 3.28s
+
+Running generate... (Use --skip-generate to skip the generators)
+
+added 2 packages, and audited 371 packages in 10s
+
+138 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+✔ Generated Prisma Client (4.14.1 | library) to .\node_modules\@prisma\client in 114ms
+
+
+## Then we want to install next-auth @prisma/client and @prisma/adapter to be able to login with google and facebook
+RUN:
+>>npm install next-auth @prisma/client @next-auth/prisma-adapter 
+
+ALSO we want to install bcrypt to hash our passwords
+RUN:
+>>npm install bcrypt 
+
+# also we need to install types for bcrypt 
+RUN:
+>>npm install -D @types/bcrypt
+
+
+############################################################################
+For those who had problems with GitHub authentication.
+
+In the official Prisma documentation, it's stated that Prisma only accepts camel case. So if GitHub wants it in this form: access-token, we will have to add a map function that changes it to the correct name. So, simply replace this line in schema.prisma:
+
+old>> access_token String? @db.String
+with this:
+new>> access_token String? @db.String @db.String @map("accessToken")
+
+Then, drop the document in MongoDB, delete the client in node_modules/prisma, and then use the command again:
+
+npx prisma db push
+
+However, if you get this error:
+EPERM: operation not permitted, unlink
+you will need to delete the entire Prisma module from node_modules, reinstall it, and then push the collections to MongoDB again.
+
+1. to push db again just run:
+>>npx prisma db push
+to generate prisma client run:
+>>npx prisma generate
+
+if you get error EPERM: operation not permitted, unlink then:
+delete the entire Prisma module from node_modules, reinstall it, and then push the collections to MongoDB again.
+
+#############################################################################
