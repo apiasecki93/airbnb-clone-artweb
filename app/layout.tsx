@@ -4,7 +4,7 @@ import RegisterModal from './components/modals/RegisterModal'
 import LoginModal from './components/modals/LoginModal'
 import SearchModal from './components/modals/SearchModal'
 import RentModal from './components/modals/RentModal'
-
+import ClientOnly from './components/ClientOnly';
 
 
 import './globals.css'
@@ -29,15 +29,17 @@ export default async function RootLayout({
     <html lang="en">
       <body className={nunitoFont.className}  >
         {/* <Modal title="Halo" isOpen/> */}
-        <ToasterProvider />
-        <SearchModal />
-        <RentModal />
-        <LoginModal />
-        <RegisterModal />
-        <Navbar currentUser={currentUser}/>
-        <div className='pb-20 pt-28'>
-          {children}
-        </div>
+        <ClientOnly>
+          <ToasterProvider />
+          <SearchModal />
+          <RentModal />
+          <LoginModal />
+          <RegisterModal />
+          <Navbar currentUser={currentUser}/>
+          <div className='pb-20 pt-28'>
+            {children}
+          </div>
+          </ClientOnly>
       </body>
     </html>
   )

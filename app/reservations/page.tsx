@@ -3,16 +3,20 @@ import EmptyState from "../components/EmptyState";
 import getCurrentUser from "../actions/getCurrentUser";
 import getReservations from "../actions/getReservations";
 import ReservationsClient from "./ReservationsClient ";
+import ClientOnly from "@/app/components/ClientOnly";
+
 
 const ReservationsPage = async () => {
     const currentUser = await getCurrentUser()
 
     if (!currentUser) {
         return (
-            <EmptyState
-                title="Unauthorized"
-                subtitle="Please login"
-            />
+            <ClientOnly> 
+                <EmptyState
+                    title="Unauthorized"
+                    subtitle="Please login"
+                />
+            </ClientOnly> 
         )
     }
 
@@ -23,18 +27,24 @@ const ReservationsPage = async () => {
 
     if (reservations.length === 0) {
         return (
-            <EmptyState
+            <ClientOnly>
+                <EmptyState
                 title="No reservations found"
                 subtitle="Look like you have no reservations on your property"
             />
+            </ClientOnly>
+            
         )
     }
 
     return (
-        <ReservationsClient 
+        <ClientOnly>
+            <ReservationsClient 
             reservations={reservations}
             currentUser={currentUser}
         />
+        </ClientOnly>
+        
     )
 }
 

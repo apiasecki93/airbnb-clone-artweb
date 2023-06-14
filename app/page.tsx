@@ -3,7 +3,9 @@ import getListings, {IListingsParams} from "./actions/getListings";
 import Container from "./components/Container"
 import EmptyState from "./components/EmptyState";
 import ListingCard from "./components/listings/ListingCard";
+import ClientOnly from "./components/ClientOnly";
 
+export const dynamic = 'force-dynamic'
 interface HomeProps {
   searchParams: IListingsParams
 }
@@ -22,7 +24,7 @@ const Home = async ({searchParams}: HomeProps) => {
   // throw new Error("Something went wrong");
 
   return (
-    <div >
+    <ClientOnly>
       <Container>
         <div className="
           pt-24 grid 
@@ -41,7 +43,7 @@ const Home = async ({searchParams}: HomeProps) => {
             })}
         </div>
       </Container>
-    </div>
+      </ClientOnly>
 
   )
 }
